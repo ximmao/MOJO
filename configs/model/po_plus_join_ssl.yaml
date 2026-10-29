@@ -1,0 +1,23 @@
+_target_: mojo_kirby.models.po_plus_latent_join_ssl.POPlusLatentJoinSSL
+dim: 128
+num_latents: 8
+enc_depth: 2
+ae_depth: 12
+output_ssl_depth: 0
+output_dec_depth: 0
+cross_heads: 4
+backbone: transformer
+dim_ssm: 256
+temporal_mask_mode: random
+mask_ratio: 0.5
+decoding_head: join
+decoding_head_model: ca
+qry_cross_att_per_bin: True # for SSL output CA
+output_ca_restrict_context: True
+output_ca_ctx_lim: 3
+rotary_t_max: 10.0
+loss_coef_scheduler: False
+ssl_loss_coef_init: 1.0
+sl_loss_coef_init: 1.0
+patch_size: 4
+separate_atn_enc_path: False

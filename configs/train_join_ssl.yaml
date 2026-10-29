@@ -1,0 +1,56 @@
+# Path: configs/train.yaml
+defaults:
+  - _self_
+  - model: possm_join_ssl.yaml
+  - dataset: perich_miller_population_2018.yaml
+  # - dataset: multi_ssl_unshuffle_pm_os_cs_pc.yaml
+
+train_transforms:
+  - _target_: mojo_kirby.transforms.UnitDropout
+    max_units: 1000
+    min_units: 60
+    mode_units: 300
+    peak: 4
+
+# data_root: ./data/processed/
+data_root: /tmp/uncompressed
+seed: 42
+batch_size: 128
+eval_batch_size: 128
+eval_epochs: 10
+epochs: 500
+steps: 0  # Note we either specify epochs or steps, not both.
+optimizer: Lamb
+base_lr: 7.8125e-06
+weight_decay: 1e-4
+unit_lr_multiplier: 10
+sequence_length: 1.0
+bin_width: 0.02
+step_size: 0.02
+# Fraction of epochs to warmup for.
+pct_start: 0.2
+num_workers: 4
+eval_num_workers: 6
+log_dir: ./logs
+name: po_join_ssl_20ms
+backend_config: gpu_fp32
+precision: 32
+nodes: 1
+gpus: 1
+use_unit_dropout: true
+keep_unit_ratio: false
+test_best: true
+
+# Where to resume/finetune from. Could be null (yaml for None, meaning train from
+# scratch) or a fully qualified path to the .ckpt file.
+ckpt_path: null
+
+# Finetuning configuration:
+finetune: false
+load_resumed: false
+# Num of epochs to freeze perceiver network while finetuning
+# -1 => Keep frozen, i.e. perform Unit-identification
+#  0 => Train everything
+# >0 => Only train unit/session embeddings for first few epochs,
+#       and then train everything
+freeze_perceiver_until_epoch: 0
